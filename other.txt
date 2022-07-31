@@ -1,0 +1,105 @@
+# # 처음에 반복이 필요한 지 확인
+# if city_pos.shape[0] < 20:
+#     # do tsp on cities directly
+#     pass
+# else:
+#     # 도시가 많을 경우 1차 클러스터링
+    
+#     # 클러스터 통합 정보 
+#     clusters = []
+    
+#     # 각 도시별 속하는 클러스터 라벨
+#     city_labels = []
+    
+#     city_num = city_pos.shape[0]
+#     K = min((city_num // 20) + 1, 20)
+    
+#     # 클러스터링 시행
+#     kmeans = KMeans(K, random_state=0).fit(city_pos)
+    
+#     city_labels.append(list(kmeans.labels_))
+    
+#     cluster_infos = []
+#     for i in range(K):
+#         # 클러스터 중심 좌표
+#         cluster_info = [kmeans.cluster_centers_[i].copy()]
+#         # i번 클러스터에 속하는 도시들 구함
+#         cluster_info.append([c for c in range(city_num) if city_labels[0][c] == i])
+        
+#         cluster_infos.append(cluster_info)
+    
+#     clusters.append(cluster_infos)    
+# 1차 클러스터들을 순회
+# 만약 클러스터 내 도시의 숫자가 10개 이상일 경우 -> 1차 클러스터들의 도시수의 최대값을 구해서 2차 클러스터링을 시행할지 결정
+# 2차 클러스터링 진행
+# 2차 클러스터링은 1차 클러스터들 차례대로 내부에서 진행되며
+# 클러스터링 할 필요가 없으면 (도시수 < 10)
+# 그냥 라벨링한다.
+
+# 이후 2차 클러스터들이 생성되면
+# 2차 클러스터들을 순회하면서 도시가 10개 이상일 경우 -> 2차 클러스터들의 도시수의 최대값을 구해서 2차 클러스터링을 시행할지 결정
+# 3차 클러스터링을 진행한다.
+
+# 같은방법으로 마지막 n차 클러스터가 도시수가 모두 10개 미만인 것으로 종료된다.
+
+# 클러스터링 라벨링 종료 이후 tsp, path tsp로 정복한다
+
+
+
+# # 2차 클러스터링 체크, 향후 반복문으로 정리
+
+# centroid_pos = [cluster[0] for cluster in clusters[0]]
+# cluster_cities = [cluster[1] for cluster in clusters[0]]
+
+# # n-1 차 클러스터들 중 시티 최대값
+# index = 0
+# while max([len(cities) for i, cities in enumerate([cluster_info[1] for cluster_info in clusters[index]])]) >= 10:
+# # while index < 2:
+#     # n 차 클러스터링 시행
+#     centroid_pos = [cluster[0] for cluster in clusters[index]]
+#     cluster_num = len(centroid_pos)
+    
+#     # n 차 클러스터링은 n-1 차 클러스터들에 다 시도함, cities 의 길이가 10 보다 작으면 그냥 라벨링
+#     label_num = 0
+#     city_labels.append([-1 for _ in range(city_num)])
+    
+#     cluster_infos = []
+    
+#     for c_info in clusters[index]:
+#         # print(c_info[1])
+#         cities = c_info[1]
+#         city_pos_new = [city_pos[c] for c in cities]
+        
+#         if len(cities) < 10:
+#             # k-means 할 필요 없을때 일괄 하나의 군집으로 생각
+#             for city in cities:
+#                 city_labels[index+1][city] = label_num
+                
+#             cluster_info = [c_info[0]]
+#             cluster_info.append(copy.deepcopy(c_info[1]))
+#             cluster_infos.append(copy.deepcopy(cluster_info))
+                
+#             c_info[1] = [label_num]
+#             label_num += 1
+            
+#         else:
+#             K = min((len(cities) // 10) + 1, 10)
+#             kmeans_new = KMeans(K, random_state=0).fit(city_pos_new)
+        
+#             #print(cities, kmeans_new.labels_)
+#             for city, label in zip(cities, kmeans_new.labels_):
+#                 city_labels[index+1][city] = label + label_num
+        
+#             for i in range(K):
+#                 cluster_info = [kmeans_new.cluster_centers_[i].copy()]
+#                 cluster_info.append([c for c in range(city_num) if city_labels[index+1][c] == i + label_num])
+#                 cluster_infos.append(copy.deepcopy(cluster_info))
+        
+#             c_info[1] = [i for i in range(label_num, K + label_num)]
+#             label_num += max(kmeans_new.labels_) + 1
+            
+#     clusters.append(copy.deepcopy(cluster_infos))
+#     index += 1
+
+# # 마지막 클러스터즈에 시티즈 좌표 입력
+# clusters.append([[pos] for pos in city_pos])
