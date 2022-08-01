@@ -5,9 +5,16 @@
 ![att48](https://user-images.githubusercontent.com/55279227/182185157-dc94fb20-5296-4b0a-ad55-8bd72c2c93cf.gif)
 ![att532](https://user-images.githubusercontent.com/55279227/182188238-963dd122-5f9a-4816-9582-b2db3f30c3d5.gif)
 
-#### CPU intel i7-2700 (3.5ghz)
+CPU intel i7-2700 (3.5ghz)
+#### att48's optimal length = 33522
+  33831 took 5 minutes. (0.9% gap)
+#### att532's optimal length = 86729
+  93279 took 98 minutes. (7.5% gap)
 
-att48 takes 5 minutes  ||   att532 takes 98 minutes
+### This project finds quite short TSP path in a short time.
+Using TSP(DP), path-TSP(Backtracking), k-means clustering algorithms.
+
+it needs numpy, matplotlib, imageio, sklearn pakages
 
 ```python
   # prepare x, y pos list (n by 2) [[0, 0], [2, 3.2] ... ]
@@ -26,9 +33,7 @@ att48 takes 5 minutes  ||   att532 takes 98 minutes
     
   tsp_obj = TSP(coords, coord_dist)
   tsp_obj.run(tsp_n=17, division_bound=5, path_tsp_n=12)
-```
-### This project finds quite short TSP path in a short time.
-Using TSP(DP), path-TSP(Backtracking), k-means clustering algorithms. 
+``` 
 
 ### run function parameter
 1. tsp_n: TSP(DP) bound. recommend < 25
