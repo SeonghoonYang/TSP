@@ -9,7 +9,7 @@ CPU intel i7-2700 (3.5ghz)
 #### att48's optimal length = 33522
   33831 took 5 minutes. (0.9% gap)
 #### att532's optimal length = 86729
-  93279 took 98 minutes. (7.5% gap)
+  93279 took 20 minutes. (7.5% gap)
 
 ### This project finds quite short TSP path in a short time.
 Using TSP(DP), path-TSP(Backtracking), k-means clustering algorithms.
